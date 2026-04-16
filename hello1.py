@@ -6,6 +6,10 @@ import random
 from datetime import datetime, timedelta
 from sklearn.ensemble import IsolationForest
 import warnings
+import pytz
+
+# Define India Timezone
+IST = pytz.timezone('Asia/Kolkata')
 warnings.filterwarnings('ignore')
 
 st.set_page_config(
@@ -455,7 +459,7 @@ st.markdown(f"""
 <div style='display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;'>
     <div>
         <div style='font-size:28px; font-weight:700; letter-spacing:-0.5px;'>Health Dashboard</div>
-        <div style='font-size:13px; color:#64748b;'>{datetime.now().strftime("%A, %d %B %Y — %H:%M")}</div>
+        <div style='font-size:13px; color:#64748b;'>{datetime.now(IST).strftime("%A, %d %B %Y — %H:%M")}</div>
     </div>
     <div style='text-align:right;'>
         <div style='font-size:11px; color:#64748b; text-transform:uppercase; letter-spacing:0.08em;'>Today's wellness</div>

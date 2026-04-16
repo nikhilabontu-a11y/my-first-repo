@@ -252,7 +252,7 @@ header[data-testid="stHeader"] { display: none !important; }
 if 'health_log' not in st.session_state:
     st.session_state.health_log = []
 if 'sensor_history' not in st.session_state:
-    now = datetime.now()
+    now = datetime.now(IST)
     hist = []
     for i in range(60):
         t = now - timedelta(minutes=60-i)
@@ -271,7 +271,7 @@ if 'wellness_history' not in st.session_state:
 
 
 # ── Simulated live sensor read ─────────────────────────────────────────────────
-def read_sensors():
+def read_sensors(IST):
     last = st.session_state.sensor_history[-1] if st.session_state.sensor_history else {}
     spo2 = round(max(88, min(100, random.gauss(last.get('spo2', 97.5), 0.4))), 1)
     hr   = round(max(45, min(160, random.gauss(last.get('hr', 72), 3))))

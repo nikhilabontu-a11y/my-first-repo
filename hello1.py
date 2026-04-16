@@ -279,7 +279,7 @@ def read_sensors(IST):
     ecg  = round(random.gauss(0, 0.25), 3)
     act  = round(max(0, min(100, random.gauss(last.get('activity', 50), 8))))
     air  = round(max(200, min(800, random.gauss(last.get('air', 350), 25))))
-    new = {'time': datetime.now(), 'spo2': spo2, 'hr': hr, 'temp': temp,
+    new = {'time': datetime.now(IST), 'spo2': spo2, 'hr': hr, 'temp': temp,
            'ecg': ecg, 'activity': act, 'air': air}
     st.session_state.sensor_history.append(new)
     if len(st.session_state.sensor_history) > 120:
@@ -442,7 +442,7 @@ with st.sidebar:
 
 
 # ── Main content ───────────────────────────────────────────────────────────────
-sensors = read_sensors()
+sensors = read_sensors(IST)
 current_inputs = st.session_state.health_log[-1] if st.session_state.health_log else {
     'sleep': 7, 'water': 8, 'stress': 3, 'diet_score': 7
 }

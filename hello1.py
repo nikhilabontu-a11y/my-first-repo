@@ -544,15 +544,9 @@ with tab1:
                  np.where(((ecg_x % (2*np.pi)) > 0.3) & ((ecg_x % (2*np.pi)) < 0.6), 0.3, 0))
         fig3 = go.Figure()
         fig3.add_trace(go.Scatter(x=ecg_x, y=ecg_y,
-            mode='lines', line=dict(color='#10b981', width=1.5)))
-        fig3.update_layout(**chart_cfg,
-            title=dict(text="ECG Waveform (AD8232)", font=dict(size=12, color='#64748b')),
-            xaxis=dict(showgrid=False, showticklabels=False),
-            yaxis=dict(showgrid=False, showticklabels=False))
+                         mode='lines', line=dict(color='#10b981', width=1.5)))
+        fig3.update_layout(**chart_cfg)
         st.plotly_chart(fig3, use_container_width=True)
-
-    with col_d:
-        st.markdown('<div class="section-header">Activity vs air quality</div>', unsafe_allow_html=True)
         fig4 = go.Figure()
         fig4.add_trace(go.Bar(x=df['time'].iloc[-15:], y=df['activity'].iloc[-15:],
             marker_color='rgba(139,92,246,0.7)', name='Activity'))

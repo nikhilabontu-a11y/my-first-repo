@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="VitaIQ — Wellness Intelligence",
     page_icon="🫀",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="auto"
 )
 
 st.markdown("""

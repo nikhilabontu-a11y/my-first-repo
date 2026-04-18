@@ -1,7 +1,7 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
-import json
 import random
 from datetime import datetime, timedelta
 from sklearn.ensemble import IsolationForest
@@ -16,7 +16,7 @@ st.set_page_config(
     page_title="VitaIQ — Wellness Intelligence",
     page_icon="🫀",
     layout="wide",
-    initial_sidebar_state="auto"
+    initial_sidebar_state="expanded"
 )
 
 st.markdown("""
@@ -55,9 +55,34 @@ html, body, [class*="css"] {
 section[data-testid="stSidebar"] {
     background: var(--bg2) !important;
     border-right: 1px solid var(--border) !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
+    width: 320px !important;
 }
 
 section[data-testid="stSidebar"] * { color: var(--text) !important; }
+
+/* Keep sidebar always visible (disable collapse behavior) */
+button[kind="header"][aria-label="Close sidebar"],
+button[kind="header"][aria-label="Open sidebar"],
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+
+/* Prevent hidden-state transform from moving sidebar off-canvas */
+section[data-testid="stSidebar"][aria-expanded="false"] {
+    margin-left: 0 !important;
+    transform: translateX(0) !important;
+    min-width: 320px !important;
+    max-width: 320px !important;
+    width: 320px !important;
+}
+
+section[data-testid="stSidebar"] > div:first-child {
+    min-width: 320px !important;
+    max-width: 320px !important;
+    width: 320px !important;
+}
 
 h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif !important; font-weight: 700 !important; }
 
@@ -246,6 +271,30 @@ footer { display: none !important; }
 header[data-testid="stHeader"] { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
+
+# Extra hardening: if Streamlit tries to collapse on rerun/mobile, reopen instantly.
+components.html(
+    """
+    <script>
+    const keepSidebarOpen = () => {
+      const doc = window.parent.document;
+      const sidebar = doc.querySelector('section[data-testid="stSidebar"]');
+      if (!sidebar) return;
+      const isCollapsed = sidebar.getAttribute("aria-expanded") === "false";
+      if (isCollapsed) {
+        const openBtn =
+          doc.querySelector('button[aria-label="Open sidebar"]') ||
+          doc.querySelector('[data-testid="collapsedControl"] button');
+        if (openBtn) openBtn.click();
+      }
+    };
+    keepSidebarOpen();
+    setInterval(keepSidebarOpen, 700);
+    </script>
+    """,
+    height=0,
+    width=0,
+)
 
 
 # ── Session state ──────────────────────────────────────────────────────────────
@@ -783,4 +832,3 @@ with tab4:
     if st.button("Re-run quantum optimization (simulate)"):
         st.success("QAOA circuit executed on IBM quantum simulator — thresholds updated!")
         st.rerun()
-

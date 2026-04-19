@@ -486,6 +486,32 @@ if st.session_state.sidebar_open:
 
 # ── Main content ───────────────────────────────────────────────────────────────
 sensors = read_sensors(IST)
+# 🚨 Health Alerts System
+alerts = []
+
+# SpO2 alert
+if sensors['spo2'] < 92:
+    alerts.append(("Critical SpO2 level!", "danger"))
+elif sensors['spo2'] < 95:
+    alerts.append(("Low SpO2 detected", "warning"))
+
+# Heart rate alert
+if sensors['hr'] > 100:
+    alerts.append(("High heart rate detected", "warning"))
+elif sensors['hr'] < 50:
+    alerts.append(("Low heart rate detected", "warning"))
+
+# Temperature alert
+if sensors['temp'] > 37.5:
+    alerts.append(("Fever risk detected", "danger"))
+
+# Show alerts
+for msg, level in alerts:
+    st.markdown(f"""
+    <div class="alert-box alert-{level}">
+        ⚠ {msg}
+    </div>
+    """, unsafe_allow_html=True)
 current_inputs = st.session_state.health_log[-1] if st.session_state.health_log else {
     'sleep': 7, 'water': 8, 'stress': 3, 'diet_score': 7
 }

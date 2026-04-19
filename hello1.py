@@ -31,7 +31,7 @@ if st.session_state.sidebar_open:
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
     --bg: #0a0e1a;
@@ -43,252 +43,101 @@ st.markdown("""
     --accent2: #3b82f6;
     --accent3: #f59e0b;
     --danger: #ef4444;
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --green: #10b981;
-    --purple: #8b5cf6;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
 }
 
+/* GLOBAL */
 html, body, [class*="css"] {
     font-family: 'Space Grotesk', sans-serif !important;
+    font-size: 16px !important;
     background-color: var(--bg) !important;
     color: var(--text) !important;
 }
-
-.stApp { background: var(--bg) !important; }
 
 .main .block-container {
     padding: 2.5rem 3rem !important;
     max-width: 1200px;
 }
 
+/* SIDEBAR */
 section[data-testid="stSidebar"] {
     background: var(--bg2) !important;
     border-right: 1px solid var(--border) !important;
+    box-shadow: 4px 0 20px rgba(0,0,0,0.4);
 }
 
-section[data-testid="stSidebar"] * { color: var(--text) !important; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+/* HEADINGS */
+h1 { font-size: 36px !important; font-weight: 800 !important; }
+h2 { font-size: 26px !important; }
+h3 { font-size: 20px !important; }
 
-h1 {
-    font-size: 32px !important;
-    letter-spacing: -0.5px;
-}
-
-h2 {
-    font-size: 24px !important;
-}
-
-h3 {
-    font-size: 18px !important;
-}
+/* CARDS */
 .metric-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-    background: rgba(17, 24, 39, 0.7);
+    background: rgba(17,24,39,0.85);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 22px;
+    transition: all 0.2s ease;
 }
-.metric-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: var(--accent-color, var(--accent));
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    border-color: #00d4aa;
 }
+
 .metric-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+    font-size: 13px;
     color: var(--muted);
-    margin-bottom: 8px;
 }
+
 .metric-value {
-    font-size: 36px;
+    font-size: 42px;
     font-weight: 700;
-    font-family: 'JetBrains Mono', monospace !important;
-    line-height: 1;
-    margin-bottom: 4px;
-}
-.metric-unit {
-    font-size: 13px;
-    color: var(--muted);
-    font-family: 'JetBrains Mono', monospace !important;
-}
-.metric-status {
-    font-size: 11px;
-    font-weight: 600;
-    margin-top: 8px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    display: inline-block;
-}
-.status-normal { background: rgba(16,185,129,0.15); color: #10b981; }
-.status-warning { background: rgba(245,158,11,0.15); color: #f59e0b; }
-.status-danger  { background: rgba(239,68,68,0.15);  color: #ef4444; }
-
-.wellness-ring-wrap {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 28px 20px;
-    text-align: center;
-}
-.wellness-score-num {
-    font-size: 64px;
-    font-weight: 700;
-    font-family: 'JetBrains Mono', monospace !important;
-    line-height: 1;
-}
-.wellness-label {
-    font-size: 13px;
-    color: var(--muted);
-    margin-top: 6px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-}
-
-.section-header {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 8px;
-    margin-bottom: 16px;
-    margin-top: 8px;
-}
-
-.risk-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-}
-.risk-bar-wrap {
-    flex: 1;
-    margin: 0 14px;
-    height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    overflow: hidden;
-}
-.risk-bar-fill { height: 100%; border-radius: 2px; }
-
-.alert-box {
-    border-radius: 12px;
-    padding: 14px 18px;
-    margin-bottom: 10px;
-    font-size: 13px;
-    font-weight: 500;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-.alert-danger { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3); color: #fca5a5; }
-.alert-warning { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3); color: #fcd34d; }
-.alert-ok { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; }
-
-.log-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px;
     font-family: 'JetBrains Mono', monospace;
 }
 
-div[data-testid="stNumberInput"] input,
-div[data-testid="stTextInput"] input,
-div[data-testid="stSelectbox"] select,
-div[data-testid="stSlider"] {
-    background: var(--bg3) !important;
-    border-color: var(--border) !important;
-    color: var(--text) !important;
-    border-radius: 8px !important;
-}
-/* Fix selectbox (Overall diet) */
-div[data-testid="stSelectbox"] > div {
-    background-color: #151c30 !important;
-    border: 1px solid #1e2d45 !important;
-    border-radius: 8px !important;
+.metric-unit {
+    font-size: 14px;
+    color: var(--muted);
 }
 
-/* Fix multiselect (Symptoms) */
+.metric-status {
+    font-size: 12px;
+}
+
+/* ALERT */
+.alert-box {
+    font-size: 14px;
+    padding: 16px 20px;
+}
+
+/* INPUTS FIX */
+div[data-testid="stSelectbox"] > div,
 div[data-testid="stMultiSelect"] > div {
-    background-color: #151c30 !important;
-    border: 1px solid #1e2d45 !important;
-    border-radius: 8px !important;
+    background-color: var(--bg3) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 10px !important;
 }
 
-/* Text inside dropdown */
-div[data-testid="stSelectbox"] * ,
+div[data-testid="stSelectbox"] *,
 div[data-testid="stMultiSelect"] * {
-    color: #e2e8f0 !important;
-}
-
-div[data-testid="stSlider"] [data-baseweb="slider"] [role="slider"] {
-    background: var(--accent) !important;
-}
-
-.stButton > button {
-    background: var(--accent) !important;
-    color: #0a0e1a !important;
-    border: none !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    font-size: 13px !important;
-    padding: 10px 24px !important;
-    letter-spacing: 0.04em !important;
-    transition: opacity 0.2s !important;
-}
-.stButton > button:hover { opacity: 0.85 !important; }
-
-.stTabs [data-baseweb="tab-list"] {
-    background: var(--bg2) !important;
-    border-radius: 10px !important;
-    gap: 4px !important;
-    padding: 4px !important;
-}
-.stTabs [data-baseweb="tab"] {
-    background: transparent !important;
-    color: var(--muted) !important;
-    border-radius: 8px !important;
-    font-family: 'Space Grotesk', sans-serif !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-}
-.stTabs [aria-selected="true"] {
-    background: var(--bg3) !important;
     color: var(--text) !important;
 }
 
-div[data-testid="stMetric"] {
-    background: var(--card) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 12px !important;
-    padding: 14px !important;
+/* BUTTON */
+.stButton > button {
+    font-size: 14px !important;
+    padding: 12px 26px !important;
 }
-div[data-testid="stMetric"] label { color: var(--muted) !important; font-size: 11px !important; }
-div[data-testid="stMetric"] [data-testid="stMetricValue"] { color: var(--text) !important; font-family: 'JetBrains Mono', monospace !important; }
 
-.plotly-chart { border-radius: 16px; overflow: hidden; }
-
-footer { display: none !important; }
-#MainMenu { display: none !important; }
+/* CLEAN UI */
 header[data-testid="stHeader"] { display: none !important; }
+footer { display: none !important; }
+
 </style>
 """, unsafe_allow_html=True)
-
 
 # ── Session state ──────────────────────────────────────────────────────────────
 if 'health_log' not in st.session_state:

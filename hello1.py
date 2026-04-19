@@ -58,8 +58,8 @@ html, body, [class*="css"] {
 .stApp { background: var(--bg) !important; }
 
 .main .block-container {
-    padding: 1.5rem 2rem !important;
-    max-width: 1400px;
+    padding: 2.5rem 3rem !important;
+    max-width: 1200px;
 }
 
 section[data-testid="stSidebar"] {
@@ -67,10 +67,20 @@ section[data-testid="stSidebar"] {
     border-right: 1px solid var(--border) !important;
 }
 
-section[data-testid="stSidebar"] * { color: var(--text) !important; }
+section[data-testid="stSidebar"] * { color: var(--text) !important; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
 
-h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif !important; font-weight: 700 !important; }
+h1 {
+    font-size: 32px !important;
+    letter-spacing: -0.5px;
+}
 
+h2 {
+    font-size: 24px !important;
+}
+
+h3 {
+    font-size: 18px !important;
+}
 .metric-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -79,6 +89,9 @@ h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif !important; font-weigh
     position: relative;
     overflow: hidden;
     transition: border-color 0.2s;
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.05);
 }
 .metric-card::before {
     content: '';

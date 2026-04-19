@@ -215,6 +215,25 @@ div[data-testid="stSlider"] {
     color: var(--text) !important;
     border-radius: 8px !important;
 }
+/* Fix selectbox (Overall diet) */
+div[data-testid="stSelectbox"] > div {
+    background-color: #151c30 !important;
+    border: 1px solid #1e2d45 !important;
+    border-radius: 8px !important;
+}
+
+/* Fix multiselect (Symptoms) */
+div[data-testid="stMultiSelect"] > div {
+    background-color: #151c30 !important;
+    border: 1px solid #1e2d45 !important;
+    border-radius: 8px !important;
+}
+
+/* Text inside dropdown */
+div[data-testid="stSelectbox"] * ,
+div[data-testid="stMultiSelect"] * {
+    color: #e2e8f0 !important;
+}
 
 div[data-testid="stSlider"] [data-baseweb="slider"] [role="slider"] {
     background: var(--accent) !important;

@@ -18,6 +18,16 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="auto"
 )
+if "sidebar_open" not in st.session_state:
+    st.session_state.sidebar_open = True
+
+col1, col2 = st.columns([1, 10])
+with col1:
+    if st.button("☰"):
+        st.session_state.sidebar_open = not st.session_state.sidebar_open
+
+if st.session_state.sidebar_open:
+    st.sidebar.markdown("### Navigation")
 
 st.markdown("""
 <style>

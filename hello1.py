@@ -388,68 +388,69 @@ def run_anomaly_detection():
 
 
 # ── Sidebar ────────────────────────────────────────────────────────────────────
-with st.sidebar:
-    st.markdown("""
-    <div style='padding: 8px 0 20px;'>
-        <div style='font-size:22px; font-weight:700; color:#00d4aa; letter-spacing:-0.5px;'>VitaIQ</div>
-        <div style='font-size:11px; color:#64748b; letter-spacing:0.08em; text-transform:uppercase;'>Wellness Intelligence</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown('<div class="section-header">Daily Health Log</div>', unsafe_allow_html=True)
-
-    with st.form("daily_log", clear_on_submit=False):
-        sleep_hrs = st.slider("Sleep last night (hrs)", 0.0, 12.0, 7.0, 0.5)
-        water     = st.slider("Water intake (glasses)", 0, 16, 8, 1)
-        stress    = st.slider("Stress level (1=none, 10=max)", 1, 10, 3, 1)
-
-        st.markdown("**Meal quality today**")
-        meals = st.selectbox("Overall diet", [
-            "Balanced (veggies, protein, grains)",
-            "Mostly healthy",
-            "Mixed / average",
-            "Mostly junk food",
-            "Skipped meals"
-        ])
-        diet_score_map = {
-            "Balanced (veggies, protein, grains)": 10,
-            "Mostly healthy": 8,
-            "Mixed / average": 6,
-            "Mostly junk food": 3,
-            "Skipped meals": 1
-        }
-
-        symptoms = st.multiselect("Any symptoms today?", [
-            "Headache", "Fatigue", "Chest pain",
-            "Shortness of breath", "Dizziness", "Nausea", "None"
-        ], default=["None"])
-
-        submitted = st.form_submit_button("Log Today's Data", use_container_width=True)
-        if submitted:
-            entry = {
-                'timestamp': datetime.now().isoformat(),
-                'sleep': sleep_hrs,
-                'water': water,
-                'stress': stress,
-                'diet_score': diet_score_map[meals],
-                'symptoms': symptoms
+if st.session_state.sidebar_open:
+    with st.sidebar:
+        st.markdown("""
+        <div style='padding: 8px 0 20px;'>
+            <div style='font-size:22px; font-weight:700; color:#00d4aa; letter-spacing:-0.5px;'>VitaIQ</div>
+            <div style='font-size:11px; color:#64748b; letter-spacing:0.08em; text-transform:uppercase;'>Wellness Intelligence</div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+        st.markdown('<div class="section-header">Daily Health Log</div>', unsafe_allow_html=True)
+    
+        with st.form("daily_log", clear_on_submit=False):
+            sleep_hrs = st.slider("Sleep last night (hrs)", 0.0, 12.0, 7.0, 0.5)
+            water     = st.slider("Water intake (glasses)", 0, 16, 8, 1)
+            stress    = st.slider("Stress level (1=none, 10=max)", 1, 10, 3, 1)
+    
+            st.markdown("**Meal quality today**")
+            meals = st.selectbox("Overall diet", [
+                "Balanced (veggies, protein, grains)",
+                "Mostly healthy",
+                "Mixed / average",
+                "Mostly junk food",
+                "Skipped meals"
+            ])
+            diet_score_map = {
+                "Balanced (veggies, protein, grains)": 10,
+                "Mostly healthy": 8,
+                "Mixed / average": 6,
+                "Mostly junk food": 3,
+                "Skipped meals": 1
             }
-            st.session_state.health_log.append(entry)
-            st.success("Logged successfully!")
-
-    st.markdown("---")
-    st.markdown('<div class="section-header">Device Status</div>', unsafe_allow_html=True)
-    st.markdown("""
-    <div style='font-size:12px; line-height:2;'>
-    <span style='color:#10b981;'>●</span> ESP32 connected (simulated)<br>
-    <span style='color:#10b981;'>●</span> MAX30102 SpO2/HR active<br>
-    <span style='color:#10b981;'>●</span> AD8232 ECG active<br>
-    <span style='color:#10b981;'>●</span> MLX90614 temp active<br>
-    <span style='color:#10b981;'>●</span> MPU6050 activity active<br>
-    <span style='color:#f59e0b;'>●</span> MQTT stream (local)
-    </div>
-    """, unsafe_allow_html=True)
-
+    
+            symptoms = st.multiselect("Any symptoms today?", [
+                "Headache", "Fatigue", "Chest pain",
+                "Shortness of breath", "Dizziness", "Nausea", "None"
+            ], default=["None"])
+    
+            submitted = st.form_submit_button("Log Today's Data", use_container_width=True)
+            if submitted:
+                entry = {
+                    'timestamp': datetime.now().isoformat(),
+                    'sleep': sleep_hrs,
+                    'water': water,
+                    'stress': stress,
+                    'diet_score': diet_score_map[meals],
+                    'symptoms': symptoms
+                }
+                st.session_state.health_log.append(entry)
+                st.success("Logged successfully!")
+    
+        st.markdown("---")
+        st.markdown('<div class="section-header">Device Status</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div style='font-size:12px; line-height:2;'>
+        <span style='color:#10b981;'>●</span> ESP32 connected (simulated)<br>
+        <span style='color:#10b981;'>●</span> MAX30102 SpO2/HR active<br>
+        <span style='color:#10b981;'>●</span> AD8232 ECG active<br>
+        <span style='color:#10b981;'>●</span> MLX90614 temp active<br>
+        <span style='color:#10b981;'>●</span> MPU6050 activity active<br>
+        <span style='color:#f59e0b;'>●</span> MQTT stream (local)
+        </div>
+        """, unsafe_allow_html=True)
+    
 
 # ── Main content ───────────────────────────────────────────────────────────────
 sensors = read_sensors(IST)

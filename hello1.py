@@ -482,7 +482,7 @@ wlabel = wellness_label(wellness)
 st.markdown(f"""
 <div style='display:flex; align-items:center; justify-content:space-between; margin-bottom:24px;'>
     <div>
-        <div style='font-size:28px; font-weight:700; letter-spacing:-0.5px;'>Health Dashboard</div>
+        <div style='     font-size:32px;     font-weight:800;     letter-spacing:-0.5px;     background: linear-gradient(90deg, #00d4aa, #3b82f6);     -webkit-background-clip: text;     -webkit-text-fill-color: transparent; '>     Health Dashboard </div>
         <div style='font-size:13px; color:#64748b;'>{datetime.now(IST).strftime("%A, %d %B %Y — %H:%M")}</div>
     </div>
     <div style='text-align:right;'>

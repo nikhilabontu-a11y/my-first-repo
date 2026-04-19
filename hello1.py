@@ -138,6 +138,27 @@ footer { display: none !important; }
 
 </style>
 """, unsafe_allow_html=True)
+st.markdown("### 🎛 Live Health Controls")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    sleep_live = st.slider("Sleep (hrs)", 0.0, 12.0, 7.0)
+
+with col2:
+    water_live = st.slider("Water (glasses)", 0, 16, 8)
+
+with col3:
+    stress_live = st.slider("Stress (1–10)", 1, 10, 3)
+
+# Override inputs LIVE
+current_inputs = {
+    'sleep': sleep_live,
+    'water': water_live,
+    'stress': stress_live,
+    'diet_score': 7
+}
+
 
 # ── Session state ──────────────────────────────────────────────────────────────
 if 'health_log' not in st.session_state:
@@ -159,6 +180,7 @@ if 'sensor_history' not in st.session_state:
     st.session_state.sensor_history = hist
 if 'wellness_history' not in st.session_state:
     st.session_state.wellness_history = []
+    
 
 
 # ── Simulated live sensor read ─────────────────────────────────────────────────

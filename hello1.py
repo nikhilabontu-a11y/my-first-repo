@@ -151,13 +151,51 @@ with col2:
 with col3:
     stress_live = st.slider("Stress (1–10)", 1, 10, 3)
 
-# Override inputs LIVE
+# NEW ROW
+col4, col5 = st.columns(2)
+
+with col4:
+    food_live = st.selectbox("Food Intake", [
+        "Balanced diet",
+        "Mostly healthy",
+        "Average",
+        "Junk food",
+        "Skipped meals"
+    ])
+
+with col5:
+    mood_live = st.selectbox("Mood", [
+        "😊 Happy",
+        "😐 Neutral",
+        "😟 Stressed",
+        "😴 Tired"
+    ])
+
+# Convert to scores (VERY IMPORTANT)
+diet_map = {
+    "Balanced diet": 10,
+    "Mostly healthy": 8,
+    "Average": 6,
+    "Junk food": 3,
+    "Skipped meals": 1
+}
+
+mood_stress_map = {
+    "😊 Happy": 2,
+    "😐 Neutral": 4,
+    "😟 Stressed": 7,
+    "😴 Tired": 6
+}
+
+# FINAL LIVE INPUT OBJECT
 current_inputs = {
     'sleep': sleep_live,
     'water': water_live,
-    'stress': stress_live,
-    'diet_score': 7
+    'stress': mood_stress_map[mood_live],   # mood influences stress
+    'diet_score': diet_map[food_live]
 }
+
+st.success("Live simulation active — adjust inputs to see real-time impact")
 
 
 # ── Session state ──────────────────────────────────────────────────────────────
@@ -180,6 +218,7 @@ if 'sensor_history' not in st.session_state:
     st.session_state.sensor_history = hist
 if 'wellness_history' not in st.session_state:
     st.session_state.wellness_history = []
+    
     
 
 

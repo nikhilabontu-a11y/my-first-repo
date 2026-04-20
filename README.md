@@ -32,5 +32,14 @@ While classical systems use fixed thresholds, VitalQ uses **Quantum Approximate 
 ### 🧪 Research Findings
 The core of this project demonstrates that **Quantum-Classical Hybrid** systems can significantly reduce "false alarm" rates in medical monitoring by optimizing multi-variable thresholds more efficiently than purely classical heuristics.
 
-The photoscripts of my prototype in software in this link below
-[View Prototype Screenshot](https://github.com/nikhilabontu-a11y/my-first-repo/tree/17be523302e862f664fec04685d694b3327dc9c1/assets)
+### 📸 VitalQ Prototype Gallery
+| Dashboard Overview | Analytics View | Quantum Logic | System Controls |
+| :---: | :---: | :---: | :---: |
+| ![View 1](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_09_14%20(1).png) | ![View 2](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_15_42.png) | ![View 3](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_17_07.png) | ![View 4](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_18_22.png) |
+| [Full Res](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_09_14%20(1).png) | [Full Res](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_15_42.png) | [Full Res](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_17_07.png) | [Full Res](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_18_22.png) |
+
+---
+
+### Professional Profiles
+* **LinkedIn:** [Nikhila Bonthu](https://www.linkedin.com/in/nikhila-bonthu-6140b021b/)
+* **GitHub:** [nikhilabontu-a11y](https://github.com/nikhilabontu-a11y)

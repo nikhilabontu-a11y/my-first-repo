@@ -26,7 +26,11 @@ While classical systems use fixed thresholds, VitalQ uses **Quantum Approximate 
 - **Machine Learning:** Isolation Forest (Unsupervised Anomaly Detection)
 - **UI Framework:** Streamlit (Engineering Dashboard)
 
+
 ---
 
 ### 🧪 Research Findings
 The core of this project demonstrates that **Quantum-Classical Hybrid** systems can significantly reduce "false alarm" rates in medical monitoring by optimizing multi-variable thresholds more efficiently than purely classical heuristics.
+
+The photoscripts of my prototype in software in this link below
+[View Prototype Screenshot](assets/screencapture-my-first-repo-hfea37symummqpthbcvbjl-streamlit-app-2026-04-20-10_09_14%20(1).png)

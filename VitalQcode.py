@@ -4,114 +4,169 @@ import numpy as np
 import random
 from datetime import datetime
 from sklearn.ensemble import IsolationForest
-import plotly.graph_objects as go
 
-# Page Configuration
-st.set_page_config(page_title="VitaIQ - Patient Portal", page_icon="🩺", layout="wide")
+st.set_page_config(page_title="VitalQ Health System", layout="wide")
 
-# Custom Styling for a Patient-Friendly, Clean Look (No Sidebar)
+# ─────────────────────────────────────────────
+# 🎨 SIMPLE CLEAN STYLE
+# ─────────────────────────────────────────────
 st.markdown("""
 <style>
-    .main { background-color: #0e1117; color: white; }
-    .stTabs [data-baseweb="tab-list"] { gap: 10px; justify-content: center; }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px; background-color: #161b22; border-radius: 5px;
-        padding: 10px 20px; color: #8b949e;
-    }
-    .stTabs [aria-selected="true"] { background-color: #238636; color: white; }
-    .metric-box {
-        background: #161b22; padding: 20px; border-radius: 15px;
-        border: 1px solid #30363d; text-align: center;
-    }
-    .risk-high { color: #ff7b72; font-weight: bold; }
-    .risk-low { color: #56d364; font-weight: bold; }
+body { background-color: #0e1117; color: white; }
+h1, h2, h3 { color: #00d4aa; }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🩺 VitaIQ: Your Personal Health Intelligence")
-st.write("A professional clinical-grade simulation for health monitoring.")
+# ─────────────────────────────────────────────
+# 🔧 SENSOR SIMULATION
+# ─────────────────────────────────────────────
+def read_sensors():
+    return {
+        "hr": round(random.gauss(75, 8)),
+        "spo2": round(random.gauss(97, 1)),
+        "temp": round(random.gauss(36.6, 0.3), 1),
+        "bp_sys": round(random.gauss(120, 10)),
+        "bp_dia": round(random.gauss(80, 5)),
+        "air": round(random.gauss(350, 50))
+    }
 
-# ─── TAB 1: USER INPUTS ───
-tab1, tab2, tab3, tab4 = st.tabs(["1. Daily Profile", "2. Live Analysis", "3. Quantum Risk Audit", "4. Realization & Recovery"])
+# ─────────────────────────────────────────────
+# 🧠 WELLNESS SCORE
+# ─────────────────────────────────────────────
+def compute_score(s, i):
+    score = 100
 
+    if s["spo2"] < 95: score -= 10
+    if s["hr"] > 100: score -= 10
+    if s["temp"] > 37.5: score -= 10
+    if i["sleep"] < 6: score -= 10
+    if i["water"] < 5: score -= 10
+    if i["stress"] > 6: score -= 15
+
+    return max(score, 0)
+
+# ─────────────────────────────────────────────
+# ⚛️ QUANTUM-INSPIRED RISK
+# ─────────────────────────────────────────────
+def quantum_risk(s, i):
+    risk = []
+
+    if s["spo2"] < 95:
+        risk.append("Oxygen level risk")
+
+    if s["hr"] > 100:
+        risk.append("Heart rate abnormal")
+
+    if s["temp"] > 37.5:
+        risk.append("Fever risk")
+
+    if i["stress"] > 6:
+        risk.append("Stress risk")
+
+    if i["sleep"] < 6:
+        risk.append("Sleep deficiency")
+
+    return risk
+
+# ─────────────────────────────────────────────
+# 🩺 RECOMMENDATIONS
+# ─────────────────────────────────────────────
+def recommendations(risks):
+    rec = []
+
+    for r in risks:
+        if "Oxygen" in r:
+            rec.append("Practice deep breathing and rest")
+        if "Heart" in r:
+            rec.append("Avoid stress and heavy activity")
+        if "Fever" in r:
+            rec.append("Monitor temperature and hydrate")
+        if "Stress" in r:
+            rec.append("Try meditation or relaxation")
+        if "Sleep" in r:
+            rec.append("Get at least 7–8 hours sleep")
+
+    return rec
+
+# ─────────────────────────────────────────────
+# 📌 TABS
+# ─────────────────────────────────────────────
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📥 Inputs",
+    "📊 Analysis",
+    "⚠️ Risk Detection",
+    "💡 Recommendations"
+])
+
+# ─────────────────────────────────────────────
+# 📥 TAB 1 INPUTS
+# ─────────────────────────────────────────────
 with tab1:
-    st.header("Personal Health Inputs")
-    st.info("Please enter your current feelings and habits for the last 24 hours.")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        age = st.number_input("Age", 1, 100, 25)
-        weight = st.number_input("Weight (kg)", 30, 200, 70)
-        sleep = st.slider("Hours of Sleep", 0.0, 12.0, 7.0)
-    with col2:
-        stress = st.select_slider("Stress Level", options=["Very Low", "Low", "Moderate", "High", "Extreme"])
-        water = st.number_input("Water Intake (Glasses)", 0, 20, 8)
-        activity = st.selectbox("Activity Level", ["Sedentary", "Lightly Active", "Very Active"])
+    st.header("Enter Your Daily Data")
 
-# ─── TAB 2: VITAL SIGN ANALYSIS ───
+    sleep = st.slider("Sleep (hours)", 0, 12, 7)
+    water = st.slider("Water intake", 0, 15, 8)
+    stress = st.slider("Stress level", 1, 10, 3)
+    activity = st.slider("Daily activity", 0, 10000, 4000)
+
+    user_inputs = {
+        "sleep": sleep,
+        "water": water,
+        "stress": stress,
+        "activity": activity
+    }
+
+    st.success("Data captured successfully")
+
+# ─────────────────────────────────────────────
+# 📊 TAB 2 ANALYSIS
+# ─────────────────────────────────────────────
 with tab2:
-    st.header("Live Vital Sign Analysis")
-    # Simulated Sensor Logic
-    hr = random.randint(65, 95)
-    spo2 = random.randint(94, 99)
-    temp = round(random.uniform(36.1, 37.5), 1)
-    bp_sys = random.randint(110, 140)
-    bp_dia = random.randint(70, 90)
-    air_q = random.randint(20, 150)
+    st.header("Health Analysis")
 
-    c1, c2, c3, c4, c5 = st.columns(5)
-    with c1: st.metric("Heart Rate", f"{hr} BPM", delta="-2")
-    with c2: st.metric("SpO2", f"{spo2}%", delta="1%")
-    with c3: st.metric("Body Temp", f"{temp}°C")
-    with c4: st.metric("Blood Pressure", f"{bp_sys}/{bp_dia}")
-    with c5: st.metric("Air Quality", f"{air_q} AQI", delta="-5", delta_color="inverse")
+    sensors = read_sensors()
 
-    # Signal Purification Graph
-    st.subheader("Signal Purification Test (Sensor Integrity)")
-    t = np.linspace(0, 5, 500)
-    clean = np.sin(2 * np.pi * 1.2 * t)
-    noise = clean + np.random.normal(0, 0.3, 500)
-    
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=t, y=noise, name="Raw Data (Noise)", line=dict(color='royalblue', width=1)))
-    fig.add_trace(go.Scatter(x=t, y=clean, name="Purified Signal", line=dict(color='red', width=2)))
-    fig.update_layout(height=300, template="plotly_dark", margin=dict(l=20,r=20,t=20,b=20))
-    st.plotly_chart(fig, use_container_width=True)
+    score = compute_score(sensors, user_inputs)
 
-# ─── TAB 3: QUANTUM RISK ANOMALIES ───
+    st.metric("Wellness Score", f"{score}/100")
+
+    col1, col2, col3 = st.columns(3)
+
+    col1.metric("Heart Rate", f"{sensors['hr']} BPM")
+    col2.metric("SpO2", f"{sensors['spo2']} %")
+    col3.metric("Temperature", f"{sensors['temp']} °C")
+
+    col4, col5 = st.columns(2)
+
+    col4.metric("Blood Pressure", f"{sensors['bp_sys']}/{sensors['bp_dia']}")
+    col5.metric("Air Quality", f"{sensors['air']} ppm")
+
+# ─────────────────────────────────────────────
+# ⚠️ TAB 3 RISK DETECTION
+# ─────────────────────────────────────────────
 with tab3:
-    st.header("Quantum-Optimized Risk Audit")
-    st.write("Using QAOA (Quantum Approximate Optimization Algorithm) to detect health anomalies.")
+    st.header("Risk Detection")
 
-    # Quantum Logic Simulation
-    # We calculate risk based on the inputs from Tab 1 and Tab 2
-    risk_score = (100 - spo2) * 5 + (hr - 70) * 2 + (8 - sleep) * 10
-    if stress == "Extreme": risk_score += 30
-    
-    # Anomaly Detection using Isolation Forest
-    st.subheader("Anomaly Identification")
-    if risk_score > 60:
-        st.error(f"⚠️ HIGH RISK DETECTED (Score: {int(risk_score)})")
-        st.write("Quantum Analysis suggests an irregular pattern in Cardiovascular vs Sleep metrics.")
+    risks = quantum_risk(sensors, user_inputs)
+
+    if not risks:
+        st.success("No risks detected")
     else:
-        st.success("✅ LOW RISK: Your vitals are optimized within quantum-classical bounds.")
+        for r in risks:
+            st.warning(r)
 
-# ─── TAB 4: REALIZATION & RECOVERY ───
+    st.info("Risk detection uses quantum-inspired optimization logic")
+
+# ─────────────────────────────────────────────
+# 💡 TAB 4 RECOMMENDATIONS
+# ─────────────────────────────────────────────
 with tab4:
-    st.header("Practical Health Recommendations")
-    st.write("Based on your identified risks, here is your recovery plan:")
+    st.header("Recommendations")
 
-    if risk_score > 60:
-        st.warning("Action Required to Encounter Risk:")
-        st.markdown("""
-        - **Hydration:** Increase water to 12 glasses to stabilize blood pressure.
-        - **Air Quality:** Use an N95 mask or air purifier; current AQI is moderate.
-        - **Sleep Hygiene:** Targeted 2-hour increase in sleep to lower heart rate cortisol.
-        - **Medical Note:** If symptoms persist, share this dashboard with your doctor.
-        """)
+    recs = recommendations(risks)
+
+    if not recs:
+        st.success("You are doing well. Maintain your lifestyle")
     else:
-        st.info("Maintenance Routine:")
-        st.markdown("- Continue current activity level.\n- Weekly Signal Purification check recommended.")
-
-if st.button("Generate Medical Report (PDF)"):
-    st.write("Processing... (Deployment Feature)")
+        for r in recs:
+            st.write(f"- {r}")

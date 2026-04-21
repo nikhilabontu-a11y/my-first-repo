@@ -4,6 +4,9 @@
 VitalQ is an intelligent healthcare monitoring system designed to reduce false alarms in patient monitoring using AI and advanced optimization techniques.
 
 > Helps doctors focus on real critical alerts instead of unnecessary noise.
+----
+## 🔗 Live Demo  
+[🚀 Try VitalQ Live](https://my-first-repo-hfea37symummqpthbcvbjl.streamlit.app)
 
 ---
 

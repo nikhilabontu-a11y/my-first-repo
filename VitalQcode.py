@@ -400,11 +400,10 @@ if st.button("Logout"):
            
 
 # ── Main content ───────────────────────────────────────────────────────────────
-
+sensors = read_sensors(IST)
 # ─────────────────────────────────────────────
 # 🫀 PATIENT / CLIENT VIEW LAYER
 # ─────────────────────────────────────────────
-
 st.title("🫀 VitalQ Smart Health Assistant")
 
 st.markdown("""

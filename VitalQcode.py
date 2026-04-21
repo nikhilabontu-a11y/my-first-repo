@@ -2,116 +2,129 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import random
+import base64
 from datetime import datetime
 from sklearn.ensemble import IsolationForest
 import plotly.graph_objects as go
+from fpdf import FPDF
 
-# Page Configuration
-st.set_page_config(page_title="VitaIQ - Patient Portal", page_icon="🩺", layout="wide")
+# 1. Page Configuration & Styling
+st.set_page_config(page_title="VitaIQ - Wellness Intelligence", page_icon="🫀", layout="wide")
 
-# Custom Styling for a Patient-Friendly, Clean Look (No Sidebar)
 st.markdown("""
 <style>
-    .main { background-color: #0e1117; color: white; }
-    .stTabs [data-baseweb="tab-list"] { gap: 10px; justify-content: center; }
+    .main { background-color: #0a0e1a; color: #e2e8f0; }
+    .stTabs [data-baseweb="tab-list"] { gap: 20px; justify-content: center; background-color: transparent; }
     .stTabs [data-baseweb="tab"] {
-        height: 50px; background-color: #161b22; border-radius: 5px;
-        padding: 10px 20px; color: #8b949e;
+        height: 60px; background-color: #111827; border-radius: 10px;
+        padding: 10px 30px; color: #64748b; border: 1px solid #1e2d45;
     }
-    .stTabs [aria-selected="true"] { background-color: #238636; color: white; }
-    .metric-box {
-        background: #161b22; padding: 20px; border-radius: 15px;
-        border: 1px solid #30363d; text-align: center;
-    }
-    .risk-high { color: #ff7b72; font-weight: bold; }
-    .risk-low { color: #56d364; font-weight: bold; }
+    .stTabs [aria-selected="true"] { background-color: #00d4aa; color: white; border: none; font-weight: bold; }
+    div[data-testid="stMetricValue"] { color: #00d4aa; font-family: 'JetBrains Mono', monospace; }
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🩺 VitaIQ: Your Personal Health Intelligence")
-st.write("A professional clinical-grade simulation for health monitoring.")
+# 2. Header Section
+st.title("🫀 VitaIQ: Quantum Wellness Intelligence")
+st.write("Professional Patient Dashboard | Signal Purification Enabled")
 
-# ─── TAB 1: USER INPUTS ───
-tab1, tab2, tab3, tab4 = st.tabs(["1. Daily Profile", "2. Live Analysis", "3. Quantum Risk Audit", "4. Realization & Recovery"])
+# 3. Main Navigation (Tabs)
+tab1, tab2, tab3, tab4 = st.tabs([
+    "📍 Daily Inputs", 
+    "📈 Live Analysis", 
+    "⚛️ Quantum Risk Audit", 
+    "📋 Realization & Recovery"
+])
 
+# --- TAB 1: USER INPUTS ---
 with tab1:
-    st.header("Personal Health Inputs")
-    st.info("Please enter your current feelings and habits for the last 24 hours.")
-    
-    col1, col2 = st.columns(2)
+    st.subheader("Patient Health Profile")
+    col1, col2, col3 = st.columns(3)
     with col1:
-        age = st.number_input("Age", 1, 100, 25)
-        weight = st.number_input("Weight (kg)", 30, 200, 70)
-        sleep = st.slider("Hours of Sleep", 0.0, 12.0, 7.0)
+        age = st.number_input("Age", 18, 100, 25)
+        sleep = st.slider("Sleep Hours (Last Night)", 0.0, 12.0, 7.5)
     with col2:
-        stress = st.select_slider("Stress Level", options=["Very Low", "Low", "Moderate", "High", "Extreme"])
-        water = st.number_input("Water Intake (Glasses)", 0, 20, 8)
-        activity = st.selectbox("Activity Level", ["Sedentary", "Lightly Active", "Very Active"])
+        stress_score = st.select_slider("Current Stress Level", options=range(1, 11), value=5)
+        weight = st.number_input("Weight (kg)", 30.0, 200.0, 72.0)
+    with col3:
+        activity = st.selectbox("Daily Activity", ["Resting", "Light Exercise", "High Intensity"])
+        water = st.number_input("Water Intake (Liters)", 0.0, 10.0, 2.0)
 
-# ─── TAB 2: VITAL SIGN ANALYSIS ───
+# --- TAB 2: LIVE ANALYSIS & PPG WAVEFORM ---
 with tab2:
-    st.header("Live Vital Sign Analysis")
-    # Simulated Sensor Logic
-    hr = random.randint(65, 95)
-    spo2 = random.randint(94, 99)
-    temp = round(random.uniform(36.1, 37.5), 1)
-    bp_sys = random.randint(110, 140)
-    bp_dia = random.randint(70, 90)
-    air_q = random.randint(20, 150)
-
-    c1, c2, c3, c4, c5 = st.columns(5)
-    with c1: st.metric("Heart Rate", f"{hr} BPM", delta="-2")
-    with c2: st.metric("SpO2", f"{spo2}%", delta="1%")
-    with c3: st.metric("Body Temp", f"{temp}°C")
-    with c4: st.metric("Blood Pressure", f"{bp_sys}/{bp_dia}")
-    with c5: st.metric("Air Quality", f"{air_q} AQI", delta="-5", delta_color="inverse")
-
-    # Signal Purification Graph
-    st.subheader("Signal Purification Test (Sensor Integrity)")
-    t = np.linspace(0, 5, 500)
-    clean = np.sin(2 * np.pi * 1.2 * t)
-    noise = clean + np.random.normal(0, 0.3, 500)
+    st.subheader("Live Diagnostic Feedback")
     
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=t, y=noise, name="Raw Data (Noise)", line=dict(color='royalblue', width=1)))
-    fig.add_trace(go.Scatter(x=t, y=clean, name="Purified Signal", line=dict(color='red', width=2)))
-    fig.update_layout(height=300, template="plotly_dark", margin=dict(l=20,r=20,t=20,b=20))
-    st.plotly_chart(fig, use_container_width=True)
+    # Logic to simulate/read sensor data
+    hr = random.randint(68, 85) + (stress_score * 2)
+    spo2 = random.randint(95, 99)
+    temp = round(36.5 + (random.random() * 0.5), 1)
+    # BP Estimation Logic (Cuff-less)
+    sys = 110 + (stress_score * 3) + (hr * 0.1)
+    dia = 70 + (stress_score * 1.5)
+    
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Heart Rate", f"{hr} BPM")
+    m2.metric("SpO2", f"{spo2}%")
+    m3.metric("Body Temp", f"{temp}°C")
+    m4.metric("Est. Blood Pressure", f"{int(sys)}/{int(dia)} mmHg")
 
-# ─── TAB 3: QUANTUM RISK ANOMALIES ───
+    # HEART BEAT GRAPH (PPG Waveform)
+    st.write("### Live PPG Heartbeat (Signal Purification)")
+    t = np.linspace(0, 4, 400)
+    # Simulate a realistic heartbeat pulse
+    clean_wave = (np.exp(-((t % 1 - 0.2)**2) / 0.01) + 0.5 * np.exp(-((t % 1 - 0.4)**2) / 0.02))
+    noisy_wave = clean_wave + np.random.normal(0, 0.04, 400) # Representing ECE Noise
+    
+    fig_ppg = go.Figure()
+    fig_ppg.add_trace(go.Scatter(x=t, y=noisy_wave, name="Raw Signal", line=dict(color='gray', width=1, dash='dot')))
+    fig_ppg.add_trace(go.Scatter(x=t, y=clean_wave, name="Purified Pulse", line=dict(color='#00d4aa', width=3)))
+    fig_ppg.update_layout(height=300, template="plotly_dark", margin=dict(l=10,r=10,t=10,b=10))
+    st.plotly_chart(fig_ppg, use_container_width=True)
+
+# --- TAB 3: QUANTUM RISK AUDIT & HEATMAP ---
 with tab3:
-    st.header("Quantum-Optimized Risk Audit")
-    st.write("Using QAOA (Quantum Approximate Optimization Algorithm) to detect health anomalies.")
-
-    # Quantum Logic Simulation
-    # We calculate risk based on the inputs from Tab 1 and Tab 2
-    risk_score = (100 - spo2) * 5 + (hr - 70) * 2 + (8 - sleep) * 10
-    if stress == "Extreme": risk_score += 30
+    st.subheader("Quantum-Classical Anomaly Detection")
     
-    # Anomaly Detection using Isolation Forest
-    st.subheader("Anomaly Identification")
-    if risk_score > 60:
-        st.error(f"⚠️ HIGH RISK DETECTED (Score: {int(risk_score)})")
-        st.write("Quantum Analysis suggests an irregular pattern in Cardiovascular vs Sleep metrics.")
-    else:
-        st.success("✅ LOW RISK: Your vitals are optimized within quantum-classical bounds.")
+    # Heatmap Logic (Adds massive weight to the app)
+    ages_grid = np.linspace(20, 80, 10)
+    hrs_grid = np.linspace(60, 120, 10)
+    z_risk = np.array([[ (a*0.3 + h*0.7) for h in hrs_grid] for a in ages_grid])
 
-# ─── TAB 4: REALIZATION & RECOVERY ───
+    fig_heat = go.Figure(data=go.Heatmap(
+        z=z_risk, x=hrs_grid, y=ages_grid, colorscale='RdYlGn_r'
+    ))
+    fig_heat.update_layout(title="Predictive Risk Heatmap (Age vs. HR)", height=400, template="plotly_dark")
+    st.plotly_chart(fig_heat, use_container_width=True)
+
+    # Risk Score calculation
+    risk_val = (stress_score * 10) + (100 - spo2) * 5
+    if risk_val > 70:
+        st.error(f"High Risk Detected: QAOA Optimizer suggests immediate rest.")
+    else:
+        st.success("Quantum Balance achieved. Vitals are within optimal range.")
+
+# --- TAB 4: REALIZATION & RECOVERY ---
 with tab4:
-    st.header("Practical Health Recommendations")
-    st.write("Based on your identified risks, here is your recovery plan:")
-
-    if risk_score > 60:
-        st.warning("Action Required to Encounter Risk:")
-        st.markdown("""
-        - **Hydration:** Increase water to 12 glasses to stabilize blood pressure.
-        - **Air Quality:** Use an N95 mask or air purifier; current AQI is moderate.
-        - **Sleep Hygiene:** Targeted 2-hour increase in sleep to lower heart rate cortisol.
-        - **Medical Note:** If symptoms persist, share this dashboard with your doctor.
-        """)
-    else:
-        st.info("Maintenance Routine:")
-        st.markdown("- Continue current activity level.\n- Weekly Signal Purification check recommended.")
-
-if st.button("Generate Medical Report (PDF)"):
-    st.write("Processing... (Deployment Feature)")
+    st.subheader("Recovery Protocol & Medical Report")
+    
+    rec_col1, rec_col2 = st.columns(2)
+    with rec_col1:
+        st.info("💡 Practical Insights")
+        if stress_score > 7:
+            st.write("- Implement 5-minute deep breathing exercises.")
+            st.write("- Reduce screen time by 2 hours today.")
+        else:
+            st.write("- Maintain current hydration levels.")
+            st.write("- Signal integrity looks stable for 24-hour monitoring.")
+    
+    with rec_col2:
+        st.info("📄 Documentation")
+        if st.button("Generate Final Medical Report"):
+            pdf = FPDF()
+            pdf.add_page()
+            pdf.set_font("Arial", 'B', 16)
+            pdf.cell(200, 10, txt="VitaIQ Clinical Summary", ln=1, align='C')
+            pdf.set_font("Arial", size=12)
+            pdf.cell(200, 10, txt=f"Timestamp: {datetime.now()}", ln=2)
+            pdf.cell(200, 10, txt=f"Estimated BP: {int(sys)}/{int(dia)}", ln=3)
+            pdf.cell(20

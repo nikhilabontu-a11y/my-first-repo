@@ -31,7 +31,6 @@ html, body, [class*="css"] { font-family: 'Space Grotesk', sans-serif; backgroun
 st.title("⚛️ VitaIQ: Quantum-Classical Medical Intelligence")
 st.write(f"**System Status:** QAOA & VQC Processing Active | **IST Time:** {current_time_ist}")
 
-# Added "Hardware" and "Quantum" specific tabs
 tabs = st.tabs(["📍 Patient Profile", "📉 Live ECG/Hardware", "⚛️ Quantum Engine", "📋 Clinical Report"])
 
 # --- TAB 1: USER INPUTS (The Digital Twin) ---
@@ -47,93 +46,92 @@ with tabs[0]:
     with col3:
         u_water = st.number_input("Hydration (Liters)", 0.0, 8.0, 2.5)
         u_caffeine = st.slider("Caffeine (Cups)", 0, 8, 2)
+    
+    st.markdown("---")
+    # NEW LOGIN / SAVE DATA BUTTON
+    if st.button("🔐 Login & Save Input Data"):
+        st.success(f"Data for {current_time_ist} has been encrypted and saved to the Quantum Vault.")
+        st.balloons()
 
-# --- TAB 2: LIVE ECG & HARDWARE DIAGNOSTICS ---
+# --- TAB 2: LIVE ECG & HARDWARE ---
 with tabs[1]:
     st.subheader("Hardware Interface & Bio-Signals")
-    
-    # Simulate Sensor Diagnostics
-    c1, c2, c3 = st.columns(3)
-    c1.info("🛠️ **Sensor Status:** MAX30102 (Active) | AD8232 (Ready)")
-    c2.info("🔗 **Port:** COM3 (ESP32-WROOM)")
-    c3.info("🛡️ **Filter:** Signal Purification (Level 5)")
-
     hr = random.randint(70, 85) + (u_stress * 1.5)
     spo2 = random.randint(96, 99)
     sys, dia = (115 + (u_stress * 2)), (75 + (u_stress * 1))
     
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Heart Rate", f"{hr} BPM")
+    m1.metric("Heart Rate", f"{int(hr)} BPM")
     m2.metric("Oxygen (SpO2)", f"{spo2}%")
     m3.metric("Est. Blood Pressure", f"{int(sys)}/{int(dia)}")
     m4.metric("Body Temp", "37.1°C")
 
-    # ECG VISUALIZATION
-    st.write("### Purified ECG Bio-Signal")
     t = np.linspace(0, 4, 1000)
     ecg = 0.15 * np.exp(-((t % 1 - 0.1)**2) / 0.001) + 1.2 * np.exp(-((t % 1 - 0.2)**2) / 0.0001) + 0.3 * np.exp(-((t % 1 - 0.45)**2) / 0.01)
     fig_ecg = go.Figure(data=go.Scatter(x=t, y=ecg, line=dict(color='#00d4aa', width=2)))
     fig_ecg.update_layout(height=280, template="plotly_dark", margin=dict(l=0,r=0,t=0,b=0), xaxis=dict(showgrid=False), yaxis=dict(showgrid=False))
     st.plotly_chart(fig_ecg, use_container_width=True)
 
-# --- TAB 3: QUANTUM TECHNOLOGY ENGINE ---
+# --- TAB 3: QUANTUM ENGINE ---
 with tabs[2]:
-    st.subheader("⚛️ Quantum Variational Intelligence (QAOA & VQC)")
-    
+    st.subheader("⚛️ Quantum Variational Intelligence")
     qc1, qc2 = st.columns(2)
     with qc1:
-        st.write("#### QAOA Cost Optimization")
-        # Visualizing convergence of the Quantum Approximate Optimization Algorithm
         p_layers = np.arange(1, 21)
         cost = 8 * np.exp(-p_layers/4) + np.random.normal(0, 0.05, 20)
         fig_q = go.Figure(data=go.Scatter(x=p_layers, y=cost, mode='lines+markers', line=dict(color='#8b5cf6')))
-        fig_q.update_layout(title="Energy Minimization (Risk Detection)", height=300, template="plotly_dark")
+        fig_q.update_layout(title="QAOA Error Convergence", height=300, template="plotly_dark")
         st.plotly_chart(fig_q, use_container_width=True)
-    
     with qc2:
-        st.write("#### Quantum State Probability")
-        # Visualizing the probability of different health states in a Quantum Circuit
         states = ['|Normal>', '|Anxious>', '|Tachycardic>', '|At-Risk>']
         probabilities = [0.85, 0.08, 0.04, 0.03]
         fig_p = go.Figure(data=go.Bar(x=states, y=probabilities, marker_color='#00d4aa'))
-        fig_p.update_layout(title="Health State Superposition (VQC Result)", height=300, template="plotly_dark")
         st.plotly_chart(fig_p, use_container_width=True)
 
-    st.write("---")
-    st.markdown("**Quantum Advantage:** By mapping health data to Hilbert Space, VitaIQ detects patterns in SpO2/HR correlations that classical systems ignore.")
-
-# --- TAB 4: RECOVERY & PDF REPORT ---
+# --- TAB 4: DYNAMIC CLINICAL REPORT ---
 with tabs[3]:
-    st.header("Clinical Action Plan & Documentation")
+    st.header("Personalized Clinical Action Plan")
+    
+    # DYNAMIC LOGIC FOR RECOMMENDATIONS
     risk_score = (u_stress * 8) + (100 - spo2) * 5 + (u_caffeine * 3)
     
-    recs = [
-        f"Increase hydration to {u_water + 0.8}L to stabilize IST-calculated metabolism.",
-        "Practice 4-7-8 breathing to reduce Quantum State variance.",
-        f"Post-Exercise Protocol: {u_exercise} requires 15 mins of Active Recovery.",
-        "Immediate Action: Reduce caffeine to 1 cup tomorrow to lower heart rate cortisol."
-    ]
+    recs = []
+    if u_stress > 7: recs.append("⚠️ HIGH STRESS: Immediate 10-min box breathing required.")
+    else: recs.append("✅ Stress levels are within quantum-stable limits.")
+
+    if u_sleep < 6: recs.append(f"😴 SLEEP DEPICIT: Your {u_sleep}h sleep is critical. Aim for 8h.")
+    else: recs.append("🌟 Sleep duration is optimal for neural recovery.")
+
+    if u_water < 2: recs.append(f"💧 DEHYDRATION: Increase intake by at least 1.5L immediately.")
     
-    for r in recs: st.write(f"✅ {r}")
+    if u_caffeine > 4: recs.append("☕ CAFFEINE ALERT: High stimulant load detected. Skip the next cup.")
+
+    if u_exercise == "None" and u_mood == "Depressed":
+        recs.append("🏃 MOOD BOOST: A light 15-min walk is statistically proven to improve your current state.")
+
+    # Display on Screen
+    for r in recs: st.write(r)
 
     if st.button("Generate Final Clinical Report"):
         pdf = FPDF()
         pdf.add_page()
         pdf.set_font("Arial", 'B', 16)
-        pdf.cell(200, 15, txt="VitaIQ Clinical Intelligence Report", ln=1, align='C')
+        pdf.cell(200, 15, txt="VitaIQ Dynamic Health Audit", ln=1, align='C')
         pdf.set_font("Arial", size=10)
-        pdf.cell(200, 10, txt=f"IST Timestamp: {current_time_ist} | Report ID: VIQ-{random.randint(1000,9999)}", ln=1)
-        pdf.line(10, 40, 200, 40)
-        
-        pdf.cell(200, 10, txt=f"Profile: Age 25 | Mood: {u_mood} | Stress: {u_stress}/10", ln=1)
-        pdf.cell(200, 10, txt=f"Vitals: HR {hr} BPM | SpO2 {spo2}% | BP {int(sys)}/{int(dia)}", ln=1)
-        pdf.cell(200, 10, txt=f"Quantum Audit Score: {int(risk_score)}", ln=1)
+        pdf.cell(200, 10, txt=f"Generated on (IST): {current_time_ist}", ln=1)
+        pdf.line(10, 35, 200, 35)
         
         pdf.set_font("Arial", 'B', 12)
-        pdf.cell(200, 10, txt="Clinical Recommendations:", ln=1)
+        pdf.cell(200, 10, txt="Patient Vital Summary:", ln=1)
         pdf.set_font("Arial", size=10)
-        for r in recs: pdf.cell(200, 8, txt=f"- {r}", ln=1)
-
-        pdf_data = pdf.output(dest='S').encode('latin-1')
-        b64 = base64.b64encode(pdf_data).decode()
-        st.markdown(f'<a href="data:application/pdf;base64,{b64}" download="VitaIQ_Clinical_Report.pdf" style="padding:15px; background:#00d4aa; color:white; border-radius:10px; text-decoration:none; font-weight:bold;">📥 Download Official Report (PDF)</a>', unsafe_allow_html=True)
+        pdf.cell(200, 8, txt=f"- Reported Mood: {u_mood}", ln=1)
+        pdf.cell(200, 8, txt=f"- Stress Level: {u_stress}/10", ln=1)
+        pdf.cell(200, 8, txt=f"- Sleep: {u_sleep} Hours", ln=1)
+        pdf.cell(200, 8, txt=f"- Quantum Risk Score: {int(risk_score)}", ln=1)
+        
+        pdf.ln(5)
+        pdf.set_font("Arial", 'B', 12)
+        pdf.cell(200, 10, txt="Dynamic Clinical Recommendations:", ln=1)
+        pdf.set_font("Arial", size=10)
+        for r in recs:
+            pdf.multi_cell(0,

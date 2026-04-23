@@ -14,7 +14,7 @@ current_time_ist = datetime.now(IST).strftime('%d %b %Y | %H:%M:%S')
 
 st.set_page_config(page_title="VitaIQ — Quantum Medical Intelligence", page_icon="⚛️", layout="wide")
 
-# High-End Dark Mode UI
+# High-End Dark Mode UI styling
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&family=JetBrains+Mono&display=swap');
@@ -33,7 +33,7 @@ st.write(f"**System Status:** QAOA & VQC Processing Active | **IST Time:** {curr
 
 tabs = st.tabs(["📍 Patient Profile", "📉 Live ECG/Hardware", "⚛️ Quantum Engine", "📋 Clinical Report"])
 
-# --- TAB 1: USER INPUTS (The Digital Twin) ---
+# --- TAB 1: USER INPUTS ---
 with tabs[0]:
     st.subheader("Comprehensive Health Journal")
     col1, col2, col3 = st.columns(3)
@@ -50,12 +50,13 @@ with tabs[0]:
     st.markdown("---")
     # NEW LOGIN / SAVE DATA BUTTON
     if st.button("🔐 Login & Save Input Data"):
-        st.success(f"Data for {current_time_ist} has been encrypted and saved to the Quantum Vault.")
+        st.success(f"Quantum Vault Updated: Data for {current_time_ist} secured.")
         st.balloons()
 
 # --- TAB 2: LIVE ECG & HARDWARE ---
 with tabs[1]:
     st.subheader("Hardware Interface & Bio-Signals")
+    # Dynamic Vitals based on stress input
     hr = random.randint(70, 85) + (u_stress * 1.5)
     spo2 = random.randint(96, 99)
     sys, dia = (115 + (u_stress * 2)), (75 + (u_stress * 1))
@@ -86,28 +87,29 @@ with tabs[2]:
         states = ['|Normal>', '|Anxious>', '|Tachycardic>', '|At-Risk>']
         probabilities = [0.85, 0.08, 0.04, 0.03]
         fig_p = go.Figure(data=go.Bar(x=states, y=probabilities, marker_color='#00d4aa'))
+        fig_p.update_layout(title="Health Superposition Probability", height=300, template="plotly_dark")
         st.plotly_chart(fig_p, use_container_width=True)
 
 # --- TAB 4: DYNAMIC CLINICAL REPORT ---
 with tabs[3]:
     st.header("Personalized Clinical Action Plan")
     
-    # DYNAMIC LOGIC FOR RECOMMENDATIONS
+    # --- DYNAMIC LOGIC ---
     risk_score = (u_stress * 8) + (100 - spo2) * 5 + (u_caffeine * 3)
-    
     recs = []
+
     if u_stress > 7: recs.append("⚠️ HIGH STRESS: Immediate 10-min box breathing required.")
-    else: recs.append("✅ Stress levels are within quantum-stable limits.")
+    else: recs.append("✅ Stress levels are stable.")
 
-    if u_sleep < 6: recs.append(f"😴 SLEEP DEPICIT: Your {u_sleep}h sleep is critical. Aim for 8h.")
-    else: recs.append("🌟 Sleep duration is optimal for neural recovery.")
+    if u_sleep < 6: recs.append(f"😴 SLEEP ALERT: {u_sleep}h is insufficient. Target 7.5h.")
+    else: recs.append("🌟 Sleep duration is optimal.")
 
-    if u_water < 2: recs.append(f"💧 DEHYDRATION: Increase intake by at least 1.5L immediately.")
+    if u_water < 2: recs.append("💧 HYDRATION: Increase intake by 1.5L to assist VQC stability.")
     
-    if u_caffeine > 4: recs.append("☕ CAFFEINE ALERT: High stimulant load detected. Skip the next cup.")
+    if u_caffeine > 4: recs.append("☕ CAFFEINE: High stimulant load detected; skip the evening dose.")
 
     if u_exercise == "None" and u_mood == "Depressed":
-        recs.append("🏃 MOOD BOOST: A light 15-min walk is statistically proven to improve your current state.")
+        recs.append("🏃 MOOD: Light 15-min movement recommended for endorphin release.")
 
     # Display on Screen
     for r in recs: st.write(r)
@@ -124,14 +126,18 @@ with tabs[3]:
         pdf.set_font("Arial", 'B', 12)
         pdf.cell(200, 10, txt="Patient Vital Summary:", ln=1)
         pdf.set_font("Arial", size=10)
-        pdf.cell(200, 8, txt=f"- Reported Mood: {u_mood}", ln=1)
-        pdf.cell(200, 8, txt=f"- Stress Level: {u_stress}/10", ln=1)
-        pdf.cell(200, 8, txt=f"- Sleep: {u_sleep} Hours", ln=1)
+        pdf.cell(200, 8, txt=f"- Stress Level: {u_stress}/10 | Mood: {u_mood}", ln=1)
+        pdf.cell(200, 8, txt=f"- Sleep: {u_sleep} Hours | Hydration: {u_water}L", ln=1)
         pdf.cell(200, 8, txt=f"- Quantum Risk Score: {int(risk_score)}", ln=1)
         
         pdf.ln(5)
         pdf.set_font("Arial", 'B', 12)
-        pdf.cell(200, 10, txt="Dynamic Clinical Recommendations:", ln=1)
+        pdf.cell(200, 10, txt="Dynamic Recommendations:", ln=1)
         pdf.set_font("Arial", size=10)
+        # FIXED: Multi-cell with proper closing bracket to fix your SyntaxError
         for r in recs:
-            pdf.multi_cell(0,
+            pdf.multi_cell(0, 8, txt=f"- {r}")
+
+        pdf_data = pdf.output(dest='S').encode('latin-1')
+        b64 = base64.b64encode(pdf_data).decode()
+        st.markdown(f'<a href="data:application/pdf;base64,{b64}" download="VitaIQ_Report.pdf" style="padding:15px; background:#00d4aa; color:white; border-radius:10px; text-decoration:none; font-weight:bold;">📥 Download Personalized Report</a>', unsafe_allow_html=True)
